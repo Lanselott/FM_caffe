@@ -1,0 +1,289 @@
+I0621 06:41:11.816246 122475 caffe.cpp:210] Use CPU.
+I0621 06:41:14.452219 122475 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 1000
+base_lr: 0.001
+display: 200
+max_iter: 240000
+lr_policy: "multistep"
+gamma: 0.1
+momentum: 0.9
+weight_decay: 0.004
+snapshot: 10000
+snapshot_prefix: "examples/cifar10//0.001_featuredecay_0.00000000045_Thu_Jun_21_06-41-07_UTC_2018/cifar10_full"
+solver_mode: CPU
+net: "examples/cifar10//0.001_featuredecay_0.00000000045_Thu_Jun_21_06-41-07_UTC_2018/net.prototxt"
+train_state {
+  level: 0
+  stage: ""
+}
+stepvalue: 120000
+stepvalue: 160000
+stepvalue: 200000
+snapshot_format: HDF5
+I0621 06:41:14.452414 122475 solver.cpp:91] Creating training net from net file: examples/cifar10//0.001_featuredecay_0.00000000045_Thu_Jun_21_06-41-07_UTC_2018/net.prototxt
+I0621 06:41:14.452821 122475 net.cpp:322] The NetState phase (0) differed from the phase (1) specified by a rule in layer cifar
+I0621 06:41:14.452837 122475 net.cpp:322] The NetState phase (0) differed from the phase (1) specified by a rule in layer accuracy
+I0621 06:41:14.452939 122475 net.cpp:58] Initializing net from parameters: 
+name: "CIFAR10_full"
+state {
+  phase: TRAIN
+  level: 0
+  stage: ""
+}
+layer {
+  name: "cifar"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mean_file: "examples/cifar10/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/cifar10/cifar10_train_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 32
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.0001
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sp_conv1"
+  type: "Sparsify"
+  bottom: "conv1"
+  top: "conv1"
+  sparsify_param {
+    coef: 4.5e-10
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "pool1"
+  top: "pool1"
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "pool1"
+  top: "norm1"
+  lrn_param {
+    local_size: 3
+    alpha: 5e-05
+    beta: 0.75
+    norm_region: WITHIN_CHANNEL
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "norm1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 32
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sp_conv2"
+  type: "Sparsify"
+  bottom: "conv2"
+  top: "conv2"
+  sparsify_param {
+    coef: 4.5e-10
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: AVE
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "pool2"
+  top: "norm2"
+  lrn_param {
+    local_size: 3
+    alpha: 5e-05
+    beta: 0.75
+    norm_region: WITHIN_CHANNEL
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "norm2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sp_conv3"
+  type: "Sparsify"
+  bottom: "conv3"
+  top: "conv3"
+  sparsify_param {
+    coef: 4.5e-10
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "conv3"
+  top: "pool3"
+  pooling_param {
+    pool: AVE
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "pool3"
+  top: "ip1"
+  param {
+    lr_mult: 1
+    decay_mult: 250
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip1"
+  bottom: "label"
+  top: "loss"
+}
+I0621 06:41:14.453044 122475 layer_factory.hpp:77] Creating layer cifar
+I0621 06:41:14.502600 122475 net.cpp:100] Creating Layer cifar
+I0621 06:41:14.502630 122475 net.cpp:408] cifar -> data
+I0621 06:41:14.502655 122475 net.cpp:408] cifar -> label
+I0621 06:41:14.502668 122475 data_transformer.cpp:25] Loading mean file from: examples/cifar10/mean.binaryproto
+F0621 06:41:14.502725 122475 io.cpp:54] Check failed: fd != -1 (-1 vs. -1) File not found: examples/cifar10/mean.binaryproto
+*** Check failure stack trace: ***
+F0621 06:41:14.514997 122636 db_lmdb.hpp:15] Check failed: mdb_status == 0 (2 vs. 0) No such file or directory
+*** Check failure stack trace: ***
+    @     0x7f2aed5c45cd  google::LogMessage::Fail()
+    @     0x7f2aed5c45cd  google::LogMessage::Fail()
+    @     0x7f2aed5c6433  google::LogMessage::SendToLog()
+    @     0x7f2aed5c6433  google::LogMessage::SendToLog()
+    @     0x7f2aed5c415b  google::LogMessage::Flush()
+    @     0x7f2aed5c415b  google::LogMessage::Flush()
+    @     0x7f2aed5c6e1e  google::LogMessageFatal::~LogMessageFatal()
+    @     0x7f2aed5c6e1e  google::LogMessageFatal::~LogMessageFatal()
+    @     0x7f2aedd5f01c  caffe::ReadProtoFromBinaryFile()
+    @     0x7f2aedd5b980  caffe::db::LMDB::Open()
+    @     0x7f2aeddc9d1e  caffe::DataTransformer<>::DataTransformer()
+    @     0x7f2aeddbdc36  caffe::DataReader::Body::InternalThreadEntry()
+    @     0x7f2aedc9b779  caffe::BaseDataLayer<>::LayerSetUp()
+    @     0x7f2aedbd77f5  caffe::InternalThread::entry()
+    @     0x7f2aedc9b8b3  caffe::BasePrefetchingDataLayer<>::LayerSetUp()
+    @     0x7f2ae3ebc5d5  (unknown)
+    @     0x7f2aeddb30c2  caffe::Net<>::Init()
+    @     0x7f2aec34a6ba  start_thread
+    @     0x7f2aeddb49fd  caffe::Net<>::Net()
+    @     0x7f2aec66741d  clone
+    @     0x7f2aedd2802a  caffe::Solver<>::InitTrainNet()
+    @              (nil)  (unknown)
