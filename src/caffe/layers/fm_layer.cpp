@@ -132,8 +132,17 @@ void FmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
     v_diff[1] = num_output;
     v_diff[2] = k_value;
     v_diff[3] = K_;
+//Backward part for update bottom_value:
+    vector<int> v_sum(3);
+    vector<int> x_diff(3);
 
+    v_sum[0] = num_output;
+    v_sum[1] = K_;
+    v_sum[2] = K_;
 
+    x_diff[0] = bottom[0]->shape(0);
+    x_diff[1] = num_output;
+    x_diff[2] = K_;
 
     // Initialize the weights
     vector<int> weight_shape(2);
@@ -174,7 +183,8 @@ void FmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       this->blobs_[11].reset(new Blob<Dtype>(x_sum_vx));
       this->blobs_[12].reset(new Blob<Dtype>(xx));
       this->blobs_[13].reset(new Blob<Dtype>(v_diff));
-
+      this->blobs_[14].reset(new Blob<Dtype>(v_sum));
+      this->blobs_[15].reset(new Blob<Dtype>(x_diff));
     }
     else
     {
@@ -195,6 +205,8 @@ void FmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       this->blobs_[10].reset(new Blob<Dtype>(x_sum_vx));
       this->blobs_[11].reset(new Blob<Dtype>(xx));
       this->blobs_[12].reset(new Blob<Dtype>(v_diff));
+      this->blobs_[13].reset(new Blob<Dtype>(v_sum));
+      this->blobs_[14].reset(new Blob<Dtype>(x_diff));
 
 
     }

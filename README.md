@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ABOUT 
 ## Repo summary
 ### Lower-rank deep neural networks (ICCV 2017)
@@ -109,3 +110,6 @@ Please cite Caffe in your publications if it helps your research:
       Title = {Caffe: Convolutional Architecture for Fast Feature Embedding},
       Year = {2014}
     }
+=======
+# FM_caffe
+>>>>>>> 81381ebdf2c29081e285cf48f5285b5908b97cea

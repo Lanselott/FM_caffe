@@ -172,6 +172,8 @@ Dtype* vx_sum_matrix;
 Dtype* x_sum_vx;
 Dtype* xx;
 Dtype* v_diff;
+Dtype* v_sum;
+Dtype* x_diff;
 Dtype* v_vector_diff;
 int v_spatial_size;
 int v_tensor_size;
@@ -184,12 +186,16 @@ if(bias_term_)
   v_vector = this->blobs_[2]->gpu_data();
   v_vector_diff = this->blobs_[2]->mutable_gpu_diff();
   vx_matrix = this->blobs_[3]->mutable_gpu_data();
+  vx_sum_matrix = this->blobs_[4]->mutable_gpu_data();
+
+
+  vxx_data = this->blobs_[10]->mutable_gpu_data();
+  x_sum_vx = this->blobs_[11]->mutable_gpu_data();
   xx = this->blobs_[12]->mutable_gpu_data();
   v_diff = this->blobs_[13]->mutable_gpu_data();
   //v_forward_output = this->blobs_[9]->mutable_gpu_data();
-  vxx_data = this->blobs_[10]->mutable_gpu_data();
-  x_sum_vx = this->blobs_[11]->mutable_gpu_data();
-  vx_sum_matrix = this->blobs_[4]->mutable_gpu_data();
+  v_sum = this->blobs_[14]->mutable_gpu_data();
+  x_diff = this->blobs_[15]->mutable_gpu_data();
 
 
   v_spatial_size = this->blobs_[2]->count(2);
@@ -202,19 +208,21 @@ else
   v_vector = this->blobs_[1]->gpu_data();
   v_vector_diff = this->blobs_[1]->mutable_gpu_diff();
   vx_matrix = this->blobs_[2]->mutable_gpu_data();
-  xx = this->blobs_[11]->mutable_gpu_data();
-  v_diff = this->blobs_[12]->mutable_gpu_data();
+  vx_sum_matrix = this->blobs_[3]->mutable_gpu_data();
+
   //v_forward_output = this->blobs_[8]->mutable_gpu_data();
   vxx_data = this->blobs_[9]->mutable_gpu_data();
   x_sum_vx = this->blobs_[10]->mutable_gpu_data();
-  vx_sum_matrix = this->blobs_[3]->mutable_gpu_data();
+  xx = this->blobs_[11]->mutable_gpu_data();
+  v_diff = this->blobs_[12]->mutable_gpu_data();
+  v_sum = this->blobs_[13]->mutable_gpu_data();
+  x_diff = this->blobs_[14]->mutable_gpu_data();
 
 
   v_spatial_size = this->blobs_[1]->count(2);
   v_tensor_size = this->blobs_[1]->count(1);
   vx_sum_spatial_size = this->blobs_[3]->count(2);
   vx_sum_tensor_size = this->blobs_[3]->count(1);
-
 }
 
 //caffe_gpu_mul<Dtype>(top[0]->shape()*K_,bottom_data,bottom_data,v_forward_output);
@@ -258,7 +266,8 @@ else
           {
               for(int j = 0; j < num_output; j++)
               {
-                for(int k = 0; k < k_value; k++){
+                for(int k = 0; k < k_value; k++)
+                {
                   caffe_gpu_mul<Dtype>(K_,xx + i * K_ ,v_vector + k * K_ + j * K_ * k_value,
                                       vxx_data + k * K_ +  j * K_ * k_value + i * K_ * k_value * num_output);
                   //caffe_gpu_gemm<Dtype>(CblasNoTrans,CblasNoTrans,);
@@ -273,10 +282,12 @@ else
           for(int i = 0; i < num_output; i++)
           {
             for(int j = 0; j < bottom[0]->shape(0); j++)
+            {
               caffe_gpu_gemm<Dtype>(CblasTrans,CblasNoTrans,
                   1,k_value * K_,bottom[0]->shape(0),
                   (Dtype)1.,top_diff + i * bottom[0]->shape(0) + j,v_diff + i * k_value * K_ + j * num_output * k_value * K_,
                   (Dtype)1.,v_vector_diff + i * k_value * K_);
+            }
           }
     }
   }
@@ -303,8 +314,41 @@ else
          (Dtype)1., top_diff, this->blobs_[0]->gpu_data(),
          (Dtype)0., bottom[0]->mutable_gpu_diff());
 
-    //NOTE: update
+      //NOTE: get v_sum [num_output,k_value,1,K_] * [num_output,k_value,1,K_] => [num_output,K_]
+      for(int i = 0; i < num_output; i++)
+      {
+        caffe_gpu_gemm<Dtype>(CblasTrans,CblasNoTrans,
+          K_,K_,k_value,
+          (Dtype)1., v_vector + i * k_value * K_ ,v_vector + i * k_value * K_ ,
+          (Dtype)0., v_sum + i * K_ * K_);
+
+      }
+      //NOTE: v_sum * bottom :[num_output, K_,K_] * [batch,K_] => [batch,num_output,K_] (x_diff)
+      for(int i = 0; i < bottom[0]->shape(0); i++)
+      {
+        for(int j  = 0;  j < num_output; j++)
+        {
+          for(int k = 0; k < K_; k++)
+          {
+            caffe_gpu_gemm<Dtype>(CblasNoTrans,CblasNoTrans,
+              1,1,K_,
+              (Dtype)1.,v_sum + k * K_ + j * K_ * K_,bottom_data + i * K_,
+              (Dtype)0.,x_diff + k + j * K_ + i * num_output * K_);
+          }
+        }
+      }
+
+      //NOTE: update the bottom: [batch,num_output] * [batch,num_output,K_] => [batch,K_]
+      for(int i = 0; i < bottom[0]->shape(0);i++)
+      {
+        caffe_gpu_gemm<Dtype>(CblasNoTrans,CblasNoTrans,
+              1.,K_,num_output,
+              (Dtype)1.,top_diff + i * num_output,x_diff + i * num_output * K_,
+              (Dtype)1.,bottom[0]->mutable_gpu_diff() + i * K_);
+      }
+
     }
+
   }
 }
 
