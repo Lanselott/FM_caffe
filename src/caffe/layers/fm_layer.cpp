@@ -57,9 +57,9 @@ void FmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
     LOG(INFO) << "Skipping parameter initialization";
   } else {
     if (bias_term_) {
-      this->blobs_.resize(4);
+      this->blobs_.resize(16);
     } else {
-      this->blobs_.resize(3);
+      this->blobs_.resize(15);
     }
     vector<int> v_vector_shape(4);
     vector<int> vx_shape(4);
@@ -155,9 +155,12 @@ void FmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
     }
     this->blobs_[0].reset(new Blob<Dtype>(weight_shape));
     // fill the weights
+
     shared_ptr<Filler<Dtype> > weight_filler(GetFiller<Dtype>(
         this->layer_param_.fm_param().weight_filler()));
+
     weight_filler->Fill(this->blobs_[0].get());
+
     // If necessary, intiialize and fill the bias term
     if (bias_term_) {
       vector<int> bias_shape(1, N_);
@@ -168,31 +171,48 @@ void FmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
 
       this->blobs_[2].reset(new Blob<Dtype>(v_vector_shape));
       //fill the v_vector_
+
       shared_ptr<Filler<Dtype> > vector_filler(GetFiller<Dtype>(
           this->layer_param_.fm_param().vector_filler()));
       vector_filler->Fill(this->blobs_[2].get());
 
       this->blobs_[3].reset(new Blob<Dtype>(vx_shape));
+      LOG(INFO)<<"ALOHA";
       this->blobs_[4].reset(new Blob<Dtype>(vx_sum_shape));
+      LOG(INFO)<<"www";
       this->blobs_[5].reset(new Blob<Dtype>(vx_sum_square));
+      LOG(INFO)<<"www";
       this->blobs_[6].reset(new Blob<Dtype>(v2x2));
+      LOG(INFO)<<"www";
       this->blobs_[7].reset(new Blob<Dtype>(v2x2_sum));
+      LOG(INFO)<<"www";
       this->blobs_[8].reset(new Blob<Dtype>(temp_));
+      LOG(INFO)<<"www";
       this->blobs_[9].reset(new Blob<Dtype>(v_forward_output));
+      LOG(INFO)<<"www";
       this->blobs_[10].reset(new Blob<Dtype>(vxx_shape));
+      LOG(INFO)<<"www";
       this->blobs_[11].reset(new Blob<Dtype>(x_sum_vx));
+      LOG(INFO)<<"www";
       this->blobs_[12].reset(new Blob<Dtype>(xx));
+      LOG(INFO)<<"www";
       this->blobs_[13].reset(new Blob<Dtype>(v_diff));
+      LOG(INFO)<<"www";
       this->blobs_[14].reset(new Blob<Dtype>(v_sum));
+      LOG(INFO)<<"www";
       this->blobs_[15].reset(new Blob<Dtype>(x_diff));
+      LOG(INFO)<<"www";
+
     }
     else
     {
       this->blobs_[1].reset(new Blob<Dtype>(v_vector_shape));
       //fill the v_vector_
+
       shared_ptr<Filler<Dtype> > vector_filler(GetFiller<Dtype>(
           this->layer_param_.fm_param().vector_filler()));
       vector_filler->Fill(this->blobs_[1].get());
+
 
       this->blobs_[2].reset(new Blob<Dtype>(vx_shape));
       this->blobs_[3].reset(new Blob<Dtype>(vx_sum_shape));

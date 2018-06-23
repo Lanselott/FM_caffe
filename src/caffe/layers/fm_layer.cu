@@ -117,13 +117,16 @@ for(int i = 0; i < bottom[0]->shape(0); i++)
 //NOTE: square the vx_sum_matrix for each value
 //vx_sum_square shape [batch,num_output,k_value,1]
   caffe_gpu_mul<Dtype>(bottom[0]->shape(0)*num_output*k_value,vx_sum_matrix,vx_sum_matrix,vx_sum_square);
-//NOTE: square vx to v^2x^2, [batch,num_output,k_value,K_], and sumup to [batch,num_output,k_value,1]
+//NOTE: square vx to v^2x^2, [batch,num_output,k_value,K_], and sum up to [batch,num_output,k_value,1]
   caffe_gpu_mul<Dtype>(bottom[0]->shape(0)*num_output*k_value*K_,vx_matrix,vx_matrix,v2x2_matrix);
-  for(int i = 0; i < k_value * num_output * bottom[0]->shape(0); i++)
+  for(int i = 0; i < k_value * num_output * bottom[0]->shape(0) * K_; i++)
   {
-    caffe_gpu_asum<Dtype>(K_,v2x2_matrix + i * K_,v2x2_sum_matrix + i);
+    //LOG(INFO)<<"kkkk"<<K_;
+    //caffe_gpu_asum<Dtype>(K_,v2x2_matrix + i * K_,v2x2_sum_matrix + i);
+    //v2x2_sum_matrix[i] = caffe_cpu_asum<Dtype>(K_,v2x2_matrix + i * K_);
+    caffe_gpu_axpy<Dtype>(1,1,v2x2_matrix + i,v2x2_sum_matrix + i / K_);
   }
-
+LOG(INFO)<<"v2x2_sum done";
   //NOTE: vx_sum_matrix - v2x2_sum_matrix => temp_ [batch,num_output,k_value,1]
   caffe_gpu_sub<Dtype>(bottom[0]->shape(0)*num_output*k_value,vx_sum_matrix,v2x2_sum_matrix,temp_);
   //NOTE: final output,sum up on k_value dimension output shape [batch,num_output,k_value,1]->[batch,num_output]
