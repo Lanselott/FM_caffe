@@ -126,7 +126,7 @@ for(int i = 0; i < bottom[0]->shape(0); i++)
     //v2x2_sum_matrix[i] = caffe_cpu_asum<Dtype>(K_,v2x2_matrix + i * K_);
     caffe_gpu_axpy<Dtype>(1,1,v2x2_matrix + i,v2x2_sum_matrix + i / K_);
   }
-LOG(INFO)<<"v2x2_sum done";
+//LOG(INFO)<<"v2x2_sum done";
   //NOTE: vx_sum_matrix - v2x2_sum_matrix => temp_ [batch,num_output,k_value,1]
   caffe_gpu_sub<Dtype>(bottom[0]->shape(0)*num_output*k_value,vx_sum_matrix,v2x2_sum_matrix,temp_);
   //NOTE: final output,sum up on k_value dimension output shape [batch,num_output,k_value,1]->[batch,num_output]
