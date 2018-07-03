@@ -105,12 +105,10 @@ for(int i = 0; i < bottom[0]->shape(0); i++)
 {
   for(int k = 0; k < num_output; k++)
   {
-    for(int j = 0; j < k_value; j++)
-    {
       caffe_gpu_gemm<Dtype>(CblasNoTrans,CblasTrans,1,1,K_,(Dtype)1.,
-                            v_vector + j * K_ + k * k_value * K_, bottom_data + i * K_,
-                           (Dtype)0.,vx_sum_matrix + j * 1 + k * k_value + i * num_output * k_value);
-    }
+                            v_vector + k * k_value * K_, bottom_data + i * K_,
+                           (Dtype)0.,vx_sum_matrix + k * k_value + i * num_output * k_value);
+    
   }
 }
 
@@ -317,7 +315,7 @@ else
          (Dtype)1., top_diff, this->blobs_[0]->gpu_data(),
          (Dtype)0., bottom[0]->mutable_gpu_diff());
 
-      //NOTE: get v_sum [num_output,k_value,1,K_] * [num_output,k_value,1,K_] => [num_output,K_]
+      //NOTE: get v_sum [num_output,k_value,1,K_] * [num_output,k_value,1,K_] => [num_output,K_,K_]
       for(int i = 0; i < num_output; i++)
       {
         caffe_gpu_gemm<Dtype>(CblasTrans,CblasNoTrans,
@@ -331,13 +329,10 @@ else
       {
         for(int j  = 0;  j < num_output; j++)
         {
-          for(int k = 0; k < K_; k++)
-          {
             caffe_gpu_gemm<Dtype>(CblasNoTrans,CblasNoTrans,
-              1,1,K_,
-              (Dtype)1.,v_sum + k * K_ + j * K_ * K_,bottom_data + i * K_,
-              (Dtype)0.,x_diff + k + j * K_ + i * num_output * K_);
-          }
+              K_,1,K_,
+              (Dtype)1.,v_sum + j * K_ * K_,bottom_data + i * K_,
+              (Dtype)0.,x_diff + j * K_ + i * num_output * K_);
         }
       }
 
