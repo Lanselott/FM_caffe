@@ -1,0 +1,51 @@
+CXX src/caffe/layers/fm_layer.cpp
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Forward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = float]’:
+src/caffe/layers/fm_layer.cpp:735:1:   required from here
+src/caffe/layers/fm_layer.cpp:371:53: error: ‘caffe_cpu_sparse_dense2csr’ was not declared in this scope
+         nz_weight_index_pointers_.mutable_cpu_data());
+                                                     ^
+src/caffe/layers/fm_layer.cpp:382:43: error: ‘caffe_cpu_sparse_mmcsr’ was not declared in this scope
+       (Dtype)0.,top[0]->mutable_cpu_data());
+                                           ^
+src/caffe/layers/fm_layer.cpp:290:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:294:7: warning: unused variable ‘bottom_spatial_shape’ [-Wunused-variable]
+   int bottom_spatial_shape = bottom[0]->count(2);
+       ^
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Backward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<bool>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = float]’:
+src/caffe/layers/fm_layer.cpp:735:1:   required from here
+src/caffe/layers/fm_layer.cpp:541:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:544:13: warning: unused variable ‘batch’ [-Wunused-variable]
+   const int batch = bottom[0]->shape(0);
+             ^
+src/caffe/layers/fm_layer.cpp:546:10: warning: unused variable ‘v_bp’ [-Wunused-variable]
+   Dtype *v_bp;
+          ^
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Forward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = double]’:
+src/caffe/layers/fm_layer.cpp:735:1:   required from here
+src/caffe/layers/fm_layer.cpp:371:53: error: ‘caffe_cpu_sparse_dense2csr’ was not declared in this scope
+         nz_weight_index_pointers_.mutable_cpu_data());
+                                                     ^
+src/caffe/layers/fm_layer.cpp:382:43: error: ‘caffe_cpu_sparse_mmcsr’ was not declared in this scope
+       (Dtype)0.,top[0]->mutable_cpu_data());
+                                           ^
+src/caffe/layers/fm_layer.cpp:290:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:294:7: warning: unused variable ‘bottom_spatial_shape’ [-Wunused-variable]
+   int bottom_spatial_shape = bottom[0]->count(2);
+       ^
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Backward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<bool>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = double]’:
+src/caffe/layers/fm_layer.cpp:735:1:   required from here
+src/caffe/layers/fm_layer.cpp:541:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:544:13: warning: unused variable ‘batch’ [-Wunused-variable]
+   const int batch = bottom[0]->shape(0);
+             ^
+src/caffe/layers/fm_layer.cpp:546:10: warning: unused variable ‘v_bp’ [-Wunused-variable]
+   Dtype *v_bp;
+          ^

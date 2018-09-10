@@ -1,0 +1,75 @@
+CXX src/caffe/layers/fm_layer.cpp
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Forward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = float]’:
+src/caffe/layers/fm_layer.cpp:803:1:   required from here
+src/caffe/layers/fm_layer.cpp:361:5: error: no matching function for call to ‘caffe::Blob<float>::Reshape(int, const int&)’
+     this->blobs_[9]->Reshape(bottom[0]->shape(0),num_output);
+     ^
+src/caffe/layers/fm_layer.cpp:361:5: note: candidates are:
+In file included from ./include/caffe/filler.hpp:10:0,
+                 from src/caffe/layers/fm_layer.cpp:3:
+./include/caffe/blob.hpp:35:8: note: void caffe::Blob<Dtype>::Reshape(int, int, int, int) [with Dtype = float]
+   void Reshape(const int num, const int channels, const int height,
+        ^
+./include/caffe/blob.hpp:35:8: note:   candidate expects 4 arguments, 2 provided
+./include/caffe/blob.hpp:51:8: note: void caffe::Blob<Dtype>::Reshape(const std::vector<int>&) [with Dtype = float]
+   void Reshape(const vector<int>& shape);
+        ^
+./include/caffe/blob.hpp:51:8: note:   candidate expects 1 argument, 2 provided
+./include/caffe/blob.hpp:61:8: note: void caffe::Blob<Dtype>::Reshape(const caffe::BlobShape&) [with Dtype = float]
+   void Reshape(const BlobShape& shape);
+        ^
+./include/caffe/blob.hpp:61:8: note:   candidate expects 1 argument, 2 provided
+src/caffe/layers/fm_layer.cpp:292:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:296:7: warning: unused variable ‘bottom_spatial_shape’ [-Wunused-variable]
+   int bottom_spatial_shape = bottom[0]->count(2);
+       ^
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Backward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<bool>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = float]’:
+src/caffe/layers/fm_layer.cpp:803:1:   required from here
+src/caffe/layers/fm_layer.cpp:609:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:612:13: warning: unused variable ‘batch’ [-Wunused-variable]
+   const int batch = bottom[0]->shape(0);
+             ^
+src/caffe/layers/fm_layer.cpp:614:10: warning: unused variable ‘v_bp’ [-Wunused-variable]
+   Dtype *v_bp;
+          ^
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Forward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = double]’:
+src/caffe/layers/fm_layer.cpp:803:1:   required from here
+src/caffe/layers/fm_layer.cpp:361:5: error: no matching function for call to ‘caffe::Blob<double>::Reshape(int, const int&)’
+     this->blobs_[9]->Reshape(bottom[0]->shape(0),num_output);
+     ^
+src/caffe/layers/fm_layer.cpp:361:5: note: candidates are:
+In file included from ./include/caffe/filler.hpp:10:0,
+                 from src/caffe/layers/fm_layer.cpp:3:
+./include/caffe/blob.hpp:35:8: note: void caffe::Blob<Dtype>::Reshape(int, int, int, int) [with Dtype = double]
+   void Reshape(const int num, const int channels, const int height,
+        ^
+./include/caffe/blob.hpp:35:8: note:   candidate expects 4 arguments, 2 provided
+./include/caffe/blob.hpp:51:8: note: void caffe::Blob<Dtype>::Reshape(const std::vector<int>&) [with Dtype = double]
+   void Reshape(const vector<int>& shape);
+        ^
+./include/caffe/blob.hpp:51:8: note:   candidate expects 1 argument, 2 provided
+./include/caffe/blob.hpp:61:8: note: void caffe::Blob<Dtype>::Reshape(const caffe::BlobShape&) [with Dtype = double]
+   void Reshape(const BlobShape& shape);
+        ^
+./include/caffe/blob.hpp:61:8: note:   candidate expects 1 argument, 2 provided
+src/caffe/layers/fm_layer.cpp:292:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:296:7: warning: unused variable ‘bottom_spatial_shape’ [-Wunused-variable]
+   int bottom_spatial_shape = bottom[0]->count(2);
+       ^
+src/caffe/layers/fm_layer.cpp: In instantiation of ‘void caffe::FmLayer<Dtype>::Backward_cpu(const std::vector<caffe::Blob<Dtype>*>&, const std::vector<bool>&, const std::vector<caffe::Blob<Dtype>*>&) [with Dtype = double]’:
+src/caffe/layers/fm_layer.cpp:803:1:   required from here
+src/caffe/layers/fm_layer.cpp:609:10: warning: unused variable ‘mutable_bottom_data’ [-Wunused-variable]
+   Dtype *mutable_bottom_data = bottom[0]->mutable_cpu_data();
+          ^
+src/caffe/layers/fm_layer.cpp:612:13: warning: unused variable ‘batch’ [-Wunused-variable]
+   const int batch = bottom[0]->shape(0);
+             ^
+src/caffe/layers/fm_layer.cpp:614:10: warning: unused variable ‘v_bp’ [-Wunused-variable]
+   Dtype *v_bp;
+          ^

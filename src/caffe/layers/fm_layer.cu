@@ -228,7 +228,8 @@ else
 
 //caffe_gpu_mul<Dtype>(top[0]->shape()*K_,bottom_data,bottom_data,v_forward_output);
 
-
+  //LOG(INFO)<<"this->param_propagate_down_[0]:"<<this->param_propagate_down_[0];
+  //LOG(INFO)<<"v_vector:"<<*v_vector;
   if (this->param_propagate_down_[0]) {
     const Dtype* top_diff = top[0]->gpu_diff();
     const Dtype* bottom_data = bottom[0]->gpu_data();

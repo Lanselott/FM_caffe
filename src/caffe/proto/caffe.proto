@@ -518,6 +518,7 @@ optional bool transpose = 6 [default = false];
 //
 optional uint32 k_value = 7 [default = 1];
 optional FillerParameter vector_filler = 8; // The filler for the vector
+optional bool do_sparse = 9 [default = true];
 
 }
 
